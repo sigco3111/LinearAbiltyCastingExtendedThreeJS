@@ -1,166 +1,76 @@
-# Elemental Sandbox
+# 원소 샌드박스 — Three.js 한글판
 
-A skillshot VFX sandbox built with **Three.js**, **Vite** and hand-written **GLSL**.
+> 원본 [achrefelouafi/LinearAbiltyCastingExtendedThreeJS](https://github.com/achrefelouafi/LinearAbiltyCastingExtendedThreeJS) 의 **포크가 아닌 한글화 사본**입니다. 모든 게임 로직·렌더링·자산은 그대로 두고 사용자 노출 문자열(메뉴, HUD, 토스트, 에디터 라벨 등)만 한국어로 옮겼습니다.
+
+<p align="center"><img width="900" src="docs/screenshot.png" alt="원소 샌드박스에서 터지는 성간 공허 폭발"></p>
+
+**<a href="https://sigco3111.github.io/LinearAbiltyCastingExtendedThreeJS/" target="_blank">🎮 라이브 플레이 — sigco3111.github.io/LinearAbiltyCastingExtendedThreeJS</a>**
+
+스킬샷 VFX 샌드박스를 **Three.js**, **Vite**, 직접 작성한 **GLSL**로 만들었습니다.
 
 ![three.js r185](https://img.shields.io/badge/three.js-r185-000000?logo=three.js&logoColor=white)
 ![Vite 8.1](https://img.shields.io/badge/Vite-8.1-646CFF?logo=vite&logoColor=white)
 ![hand-written GLSL](https://img.shields.io/badge/shaders-hand--written%20GLSL-5586A4)
 ![10 abilities](https://img.shields.io/badge/abilities-10-9dff2b)
-![2,261 live sliders](https://img.shields.io/badge/live%20sliders-2%2C261-a878f0)
+![2260+ live sliders](https://img.shields.io/badge/live%20sliders-2260+-a878f0)
 ![procedural](https://img.shields.io/badge/geometry-procedural-ff4a2a)
 
-![The Astral Void Blast: a black disc with a photon ring welded to its edge, wrapped in a sheared violet nebula, with void-shards falling in around it](docs/screenshots/astral.jpg)
+![성간 공허 폭발: 가장자리에 광자 고리가 박힌 검은 원반, 찢어진 보라 성운에 감싸이고 공허 파편이 주변으로 떨어져 내림](docs/screenshots/astral.jpg)
 
-Ten abilities and two ways to aim them. Three are **line casts**: press the key to arm, a
-League-of-Legends style arrow appears on the ground and swings with the mouse, click to fire. The
-other seven are **far casts**: the arrow is replaced by a circle with a deliberately thick boundary
-that follows the cursor and answers the only question a ground-targeted AoE has to answer before you
-commit — how much space is this going to take.
+능력 10종, 조준 방식 2종. 3종은 **직선 시전**입니다. 키를 눌러 장전하면 리그 오브 레전드식 화살표가 바닥에 나타나 마우스를 따라 흔들리고, 클릭하면 발사됩니다. 나머지 7종은 **원거리 시전**입니다. 화살표 대신 의도적으로 두꺼운 경계의 원이 커서를 따라다니며, 지면 지정 광역기가 확정 전에 답해야 하는 단 하나의 질문 — "이거 얼마나 넓게 깔리는 거야" — 에 답합니다.
 
 ---
 
-## The ten abilities
+## 능력 10종
 
-Every frame below is the renderer's own output, captured from the running sandbox at the moment the
-cast peaks. No compositing, no touch-up, and nothing in shot that the app does not draw itself.
+아래 모든 장면은 시전이 정점에 이른 순간 실행 중인 샌드박스에서 렌더러가 직접 뽑아낸 출력입니다. 합성·보정 없이, 앱이 직접 그리지 않은 것은 화면에 없습니다.
 
 <table>
 <tr>
-<td width="50%"><img src="docs/screenshots/ward.jpg" alt="Volcanic Horror Ward" width="100%"></td>
-<td width="50%"><img src="docs/screenshots/acid.jpg" alt="Caustic Bloom" width="100%"></td>
+<td width="50%"><img src="docs/screenshots/ward.jpg" alt="화산 공포 수호막" width="100%"></td>
+<td width="50%"><img src="docs/screenshots/acid.jpg" alt="부식 개화" width="100%"></td>
 </tr>
 <tr>
-<td><b>Q — Volcanic Horror Ward</b> · <sub>far cast</sub><br>A runed barrier standing over a floor of live lava.</td>
-<td><b>E — Caustic Bloom</b> · <sub>far cast</sub><br>A pool of live acid under a raymarched column of toxic gas.</td>
+<td><b>Q — 화산 공포 수호막</b> · <sub>원거리 시전</sub><br>살아있는 용암 바닥 위에 서 있는 룬 장벽.</td>
+<td><b>E — 부식 개화</b> · <sub>원거리 시전</sub><br>살아있는 산성 웅덩이 위에 선 레이마칭 독가스 기둥.</td>
 </tr>
 <tr>
-<td><img src="docs/screenshots/growth.jpg" alt="Arborist's Growth Chrono-Summon" width="100%"></td>
-<td><img src="docs/screenshots/cyber.jpg" alt="Neon Cyber Serpent" width="100%"></td>
+<td><img src="docs/screenshots/growth.jpg" alt="수목가의 성장 시간소환수" width="100%"></td>
+<td><img src="docs/screenshots/cyber.jpg" alt="네온 사이버 서펜트" width="100%"></td>
 </tr>
 <tr>
-<td><b>R — Arborist's Growth</b> · <sub>far cast</sub><br>A summon that picks its own targets and fires a lance of green light.</td>
-<td><b>F — Cyber Serpent</b> · <sub>line cast</sub><br>A neon serpent whose whole trail is one vertex-shader ribbon.</td>
+<td><b>R — 수목가의 성장</b> · <sub>원거리 시전</sub><br>스스로 표적을 골라 녹색 빛의 창을 쏘는 소환수.</td>
+<td><b>F — 사이버 서펜트</b> · <sub>직선 시전</sub><br>궤적 전체가 하나의 버텍스 셰이더 리본인 네온 서펜트.</td>
 </tr>
 <tr>
-<td><img src="docs/screenshots/venom.jpg" alt="Crystallized Venom Surge" width="100%"></td>
-<td><img src="docs/screenshots/quake.jpg" alt="Brutalist Earth Blast" width="100%"></td>
+<td><img src="docs/screenshots/venom.jpg" alt="결정화 맹독 쇄도" width="100%"></td>
+<td><img src="docs/screenshots/quake.jpg" alt="브루탈 대지 폭발" width="100%"></td>
 </tr>
 <tr>
-<td><b>V — Crystallized Venom Surge</b> · <sub>line cast</sub><br>An amethyst seam that tears down the line and opens into a starburst.</td>
-<td><b>X — Brutalist Earth Blast</b> · <sub>line cast</sub><br>Photo-scanned monoliths, a dust shockwave and real ballistic shrapnel.</td>
+<td><b>V — 결정화 맹독 쇄도</b> · <sub>직선 시전</sub><br>선을 따라 찢어진 자수정 이음매가 끝에 가서 별폭발로 벌어짐.</td>
+<td><b>X — 브루탈 대지 폭발</b> · <sub>직선 시전</sub><br>포토스캔 모놀리스, 먼지 충격파, 실제 탄도 파편.</td>
 </tr>
 <tr>
-<td><img src="docs/screenshots/ink.jpg" alt="Sumi Tide" width="100%"></td>
-<td><img src="docs/screenshots/astral.jpg" alt="Astral Void Blast" width="100%"></td>
+<td><img src="docs/screenshots/ink.jpg" alt="수묵 조류" width="100%"></td>
+<td><img src="docs/screenshots/astral.jpg" alt="성간 공허 폭발" width="100%"></td>
 </tr>
 <tr>
-<td><b>B — Sumi Tide</b> · <sub>far cast</sub><br>Ink floods the stone, a wall of water stands up, and what it catches is wound under.</td>
-<td><b>Z — Astral Void Blast</b> · <sub>far cast</sub><br>A singularity that lenses the whole frame and eats what it catches.</td>
+<td><b>B — 수묵 조류</b> · <sub>원거리 시전</sub><br>먹이 돌을 적시고 물의 벽이 일어서면, 걸린 것은 물속으로 감김.</td>
+<td><b>Z — 성간 공허 폭발</b> · <sub>원거리 시전</sub><br>화면 전체를 휘게 하는 특이점, 걸린 것은 삼킴.</td>
 </tr>
 <tr>
-<td><img src="docs/screenshots/cascade.jpg" alt="Baleful Cascade Mark" width="100%"></td>
-<td><img src="docs/screenshots/rend.jpg" alt="Celestial Rend" width="100%"></td>
+<td><img src="docs/screenshots/cascade.jpg" alt="재앙의 연쇄 표식" width="100%"></td>
+<td><img src="docs/screenshots/rend.jpg" alt="천열" width="100%"></td>
 </tr>
 <tr>
-<td><b>N — Baleful Cascade Mark</b> · <sub>far cast</sub><br>A crown of blades that throws itself, one blade at a time, at the nearest body.</td>
-<td><b>K — Celestial Rend</b> · <sub>far cast</sub><br>Shards drive into a mark until it detonates into a thirty-metre column of light.</td>
+<td><b>N — 재앙의 연쇄 표식</b> · <sub>원거리 시전</sub><br>가장 가까운 몸을 향해 한 자루씩 스스로를 던지는 칼날 왕관.</td>
+<td><b>K — 천열</b> · <sub>원거리 시전</sub><br>파편이 표식에 박히다 30미터 빛 기둥으로 터져 오름.</td>
 </tr>
 </table>
 
 ---
 
-## Six of them, up close
-
-**E — Caustic Bloom.** A far cast, and a poison acid aura. A slick of corrosion runs across the
-floor to the circle; the stone inside it crazes, pits and dissolves into a pool of live acid with
-bubbles breaking on its surface, a ring of light snaps out along the boundary, and a **raymarched**
-column of toxic gas climbs out of the pool and stands over it — clipped against the scene depth, so
-anything inside the aura is genuinely inside the cloud rather than pasted in front of it. It holds
-there boiling on an envelope that never repeats, venting gouts of gas, then goes inert and sinks
-back into a stain.
-
-**R — Arborist's Growth Chrono-Summon.** A far cast, and the only one that is not a strike but a
-**summon**. A seed of green light runs across the floor to the circle; a nature sigil opens there and
-races out to the boundary; a nest of woody tendrils tears up out of it, climbing and curling and
-unfurling foliage as the growth front passes them; and an arcane bloom rises out of the middle and
-opens, whorl by whorl, over a core that is visibly winding up. Then it goes to work. It is the one
-cast in the sandbox that **picks its own targets**: it marks the nearest body still standing, charges
-on it, and fires a lance of green light — and what the lance goes through comes apart at the waist.
-
-**V — Crystallized Venom Surge.** A line cast built to a five-panel VFX breakdown sheet, and
-organised so you can take the frame apart the same way. A seam of amethyst tears along the line and
-opens into a **starburst** at the far end — three populations doing three jobs, long spears defining
-the silhouette, blades filling the body, chunky shards skirting the base — every gem purple stone
-with green **venom** sealed in its flaws. Heavy **gas** rolls off the bases rather than lifting,
-**droplets** are flung out of the break and arc back down, and keep dripping off the tips while it
-stands. The floor is cut into slabs by a **Voronoi** and heaved, with light coming up out of the
-seams. And a **glow** kernel sits at the heart of it, which the crystals read as a real light source
-— the gems nearest it are lit from that direction, so the two layers are one object rather than a
-lamp parked in a pile of rocks.
-
-**X — Brutalist Earth Blast.** The one cast in the sandbox with nothing emissive in it. A rupture
-front tears down the line, shearing slabs of the floor up behind it, and at the far end the ground
-fails outright: a cluster of **monoliths** punches up out of a crater, canted whichever way its own
-fracture allowed rather than fanned out like a starburst. The stone is a real `MeshStandardMaterial`
-wearing a **triplanar projection of a photographic rock scan** — sun, shadows, IBL, occlusion — with
-the fresh fracture faces unweathered, the roots damp from under the floor, and cement dust settling
-pale on every up-facing surface over the seconds that follow. A **dust shockwave** rolls outward
-along the ground as a genuine torus of lit, non-additive smoke, hollow in the middle, with the plume
-climbing behind it. **Shrapnel** is real instanced rock on a ballistic arc: it tumbles, bounces,
-loses energy to friction and is left lying where it lands. The floor keeps a heaved **Voronoi
-crater** and a network of **dark fissures** racing out past it. And the air itself is displaced — a
-radial pressure ring and a column of churn written into the refraction buffer. Built to the
-five-panel breakdown sheet, and filed in the editor the same way.
-
-**Z — Astral Void Blast.** A far cast, built to a five-panel breakdown sheet, and the only one that
-takes what it catches *out of the world*. A pinprick of collapsed space is thrown to the circle
-already bending the frame around itself on the way; where it lands it inflates, holds for a breath,
-and then **collapses** — and the collapse is the blast. A **singularity** hangs there as a pitch-black
-disc with a photon ring welded to its edge, brighter on the limb turning toward you than on the one
-turning away. A real **gravitational lens** on the distortion layer wraps the whole finished frame
-around it — the stage, the character, and this ability's own other four layers. A raymarched
-**nebula** erupts around it, oblate and differentially sheared so its arms curl into genuine spirals,
-deep cosmic violet in the body and gold in the throat, with straight golden spears lancing out along
-the equator. Crystalline **void-shards** are thrown clear and immediately caught, tumbling on a
-closed-form infall whose winding diverges as they arrive, going incandescent as the tide strains them
-apart. And a planar **shockwave** rips outward across the floor, lifting a crest of displaced air and
-shoving the frame aside behind it. Then it does what it is for: everything inside the reach is
-knocked *inward*, lifted off the stone, wound in, stretched by a pull sampled per joint, and consumed
-at the horizon — and when the hole finally closes on itself it takes the light with it.
-
-**N — Baleful Cascade Mark.** A far cast, built to a four-panel breakdown sheet, and the second cast
-in the sandbox that picks its own targets. A shard of cold light runs to the circle; a **ground glow**
-opens there as a pool with a lit lip; an angular **decal mark** cuts itself on over the top of it —
-a barbed four-point star inside a diamond, with a knot of hooks at its middle, every stroke a signed
-distance field measured in metres so the whole emblem re-cuts itself when you drag the footprint;
-**wisps** climb out of the ring as unbroken ribbons and are drawn inward onto the axis above them;
-and a **core mesh burst** tears up out of the middle — a crown of faceted blades, teal and violet,
-around a heart that lights the facets nearest it. Then it goes to work. It marks the nearest body
-still standing, winds up on it, and **throws its own blades**: the blade that leaves is the one
-already pointing that way, it leaves from that blade's actual tip, and the gap it leaves in the crown
-stays there until it grows back. Three arrive seventy milliseconds apart and only the last one is
-lethal — the first two draw sparks off the body and go through it. What the last one goes through
-comes apart at the waist.
-
-Everything you can see is generated. There are no textures, no sprite sheets and no meshes on
-disk except the character and the serpent: the crystals and the monoliths are procedural geometry,
-the serpent's trail is a strip of ribbon placed entirely by a vertex shader, the summon's
-tendrils, its foliage and every petal on its bloom are grids of parameter space placed entirely in a
-vertex shader, the arrow, the targeting circle, the nature sigil with its generated runes, the
-burns and the fissures are signed-distance and noise shaders, and the mist, sparks, chips,
-leaves and glitter are GPU particles. The **Brutalist Earth Blast is the deliberate exception**: its
-slabs, shrapnel and crater are procedural geometry like everything else, but they are *shaded* with
-the same CC0 ambientCG **Rock030** scan the floor is dressed with, projected triplanar in world
-metres. Procedural noise gets you stone that looks like stone; it does not get you stone that looks
-photographed, and that ability's whole read depends on the second one.
-
-**Every parameter is a live slider** — 2,261 of them, plus 424 colour pickers — and they stay live while the simulation is
-paused. That is the point of the project: freeze a frame mid-eruption, mid-strike or mid-burn with
-**P**, then reshape the silhouette, the palette and the timing against a still image.
-
----
-
-## Quick start
+## 빠른 시작
 
 ```bash
 npm install
@@ -170,7 +80,7 @@ npm install
 npm run dev
 ```
 
-Then open the URL Vite prints (default <http://127.0.0.1:5173>).
+Vite가 찍어주는 URL을 여세요(기본 <http://127.0.0.1:5173>).
 
 ```bash
 npm run build
@@ -180,584 +90,246 @@ npm run build
 npm run preview
 ```
 
-### Assets
+### 자산
 
-Six binary assets are served from `public/` and loaded automatically at boot:
+바이너리 자산은 `public/` 에서 서빙되어 부팅 때 자동으로 로드됩니다.
 
-| File | Purpose |
+| 파일 | 용도 |
 | --- | --- |
-| `public/models/Idle.fbx` | Rigged character **and** its idle animation clip |
-| `public/models/diffuse.png` | The character's colour map |
-| `public/models/cast1.fbx` | Cast animation |
-| `public/models/cast2.fbx` | Cast animation |
-| `public/models/cast3.fbx` | Cast animation — the default for the Ward, the Growth, the Rift, the Tide and the Cascade |
-| `public/models/snake.glb` | The Cyber Serpent's body, rebuilt into a ghost-instanced strip at boot |
-| `public/hdri/spruit_sunrise.hdr` | HDR probe used for image-based lighting and crystal reflections |
+| `public/models/Idle.fbx` | 리깅된 캐릭터 **및** 대기 애니메이션 클립 |
+| `public/models/diffuse.png` | 캐릭터 컬러 맵 |
+| `public/models/cast1.fbx` | 시전 애니메이션 |
+| `public/models/cast2.fbx` | 시전 애니메이션 |
+| `public/models/cast3.fbx` | 시전 애니메이션 — 수호막·성장·균열·조류·연쇄의 기본값 |
+| `public/models/dummy.fbx` | 허수아비 표적 |
+| `public/models/snake.glb` | 사이버 서펜트의 몸통, 부팅 때 고스트 인스턴스 스트립으로 재구성 |
+| `public/hdri/spruit_sunrise.hdr` | 이미지 기반 조명·결정 반사용 HDR 프로브 |
 
-All four FBX files are Mixamo exports of the same rig, each carrying a skinned mesh plus one
-animation stack. The character comes from the idle file; the cast files are loaded for their clip
-alone, and the duplicate rig that arrives with each one is released the moment its `AnimationClip`
-has been taken. Clips bind to the skeleton by bone name, which is the whole reason an animation
-authored in another file plays here without retargeting.
+FBX들은 모두 같은 리그의 Mixamo 익스포트로, 스킨드 메시 + 애니메이션 스택 1개씩을 담고 있습니다. 캐릭터는 대기 파일에서 오고, 시전 파일들은 클립만 가져옵니다. 각 파일과 함께 딸려온 중복 리그는 `AnimationClip` 을 꺼내는 즉시 해제됩니다. 클립은 본 이름으로 스켈레톤에 바인딩되므로, 다른 파일에서 만든 애니메이션이 리타게팅 없이 그대로 재생됩니다.
 
-The rig ships no material, so `diffuse.png` is loaded beside it and assigned as the colour map when
-the imported materials are converted to PBR — an FBX that *does* carry an embedded texture keeps its
-own, since that map is authored against its own UVs.
+리그에 머티리얼이 없으므로 `diffuse.png` 를 옆에서 로드해 임포트 머티리얼을 PBR로 변환할 때 컬러 맵으로 붙입니다. 내장 텍스처를 가진 FBX는 자기 UV 기준으로 만든 맵을 유지합니다.
 
-Every ability picks the clip it throws — `castAnim` in its settings block, a dropdown under **The
-cast** in its editor folder. Out of the box the Ward, the Growth, the Rift, the Tide and the Cascade
-throw `cast3`, the Bloom, the Serpent, the Surge and the Void Blast throw `cast2`, and the Rend
-throws `cast1`. The clip is a one-shot laid over the looping idle, with `character.castBlendIn` /
-`castBlendOut` as the two edges of that overlap.
+각 능력은 던지는 클립을 직접 고릅니다 — 설정 블록의 `castAnim`, 에디터 폴더의 **시전** 아래 드롭다운입니다. 기본값은 수호막·성장·균열·조류·연쇄가 `cast3`, 개화·서펜트·쇄도·공허 폭발이 `cast2`, 천열이 `cast1` 입니다. 클립은 루프 대기 위에 얹는 원샷이며, 겹치는 양쪽 경계가 `character.castBlendIn` / `castBlendOut` 입니다.
 
-The HDR is loaded as image-based lighting and as the reflection source for the crystals — it is
-never shown as a visible sky. The stage keeps its flat dark backdrop.
+HDR은 이미지 기반 조명과 결정 반사광으로만 쓰고 보이는 하늘로는 쓰지 않습니다. 무대는 평평한 어두운 배경을 유지합니다.
 
 ---
 
-## Controls
+## 조작법
 
-| Input | Action |
+| 입력 | 동작 |
 | --- | --- |
-| **Q** (or **1**) | Arm Volcanic Horror Ward — a far cast, aimed with a circle |
-| **E** (or **2**) | Arm Caustic Bloom — a far cast, and a poison acid aura |
-| **R** (or **3**) | Arm the Arborist's Growth Chrono-Summon — a far cast that picks its own targets |
-| **F** (or **4**) | Arm the Cyber Serpent — a line cast |
-| **V** (or **5**) | Arm the Crystallized Venom Surge — a line cast |
-| **X** (or **6**) | Arm the Brutalist Earth Blast — a line cast |
-| **B** (or **7**) | Arm the Sumi Tide — a far cast that takes hold of what it catches |
-| **Z** (or **8**) | Arm the Astral Void Blast — a far cast that eats what it catches |
-| **N** (or **9**) | Arm the Baleful Cascade Mark — a far cast that throws its own blades |
-| **K** (or **0**) | Arm the Celestial Rend — a far cast |
-| **Move the mouse** | Swing the aim arrow, or move the far-cast circle |
-| **Left click** | Cast along the arrow, or drop the circle where it is |
-| **Esc** / **right click** | Cancel an armed cast |
-| **Right mouse + drag** | Orbit the camera |
-| **Scroll** | Zoom |
-| **G** | Show/hide the VFX editor |
-| **P** | Pause / resume — *the editor keeps applying* |
-| **C** | Clear all active effects |
-| **H** | Hide the controls panel |
+| **Q** (또는 **1**) | 화산 공포 수호막 장전 — 원거리 시전, 원으로 조준 |
+| **E** (또는 **2**) | 부식 개화 장전 — 원거리 시전, 맹독 산성 오라 |
+| **R** (또는 **3**) | 수목가의 성장 시간소환수 장전 — 스스로 표적을 고르는 원거리 시전 |
+| **F** (또는 **4**) | 사이버 서펜트 장전 — 직선 시전 |
+| **V** (또는 **5**) | 결정화 맹독 쇄도 장전 — 직선 시전 |
+| **X** (또는 **6**) | 브루탈 대지 폭발 장전 — 직선 시전 |
+| **B** (또는 **7**) | 수묵 조류 장전 — 걸린 것을 붙잡는 원거리 시전 |
+| **Z** (또는 **8**) | 성간 공허 폭발 장전 — 걸린 것을 삼키는 원거리 시전 |
+| **N** (또는 **9**) | 재앙의 연쇄 표식 장전 — 스스로 칼날을 던지는 원거리 시전 |
+| **K** (또는 **0**) | 천열 장전 — 원거리 시전 |
+| **마우스 이동** | 조준 화살표를 흔들거나 원거리 시전 원을 이동 |
+| **왼쪽 클릭** | 화살표 방향으로 시전, 또는 원을 그 자리에 내려놓기 |
+| **Esc** / **오른쪽 클릭** | 장전된 시전 취소 |
+| **오른쪽 마우스 + 드래그** | 카메라 회전 |
+| **스크롤** | 줌 |
+| **G** | VFX 에디터 표시/숨기기 |
+| **P** | 일시정지/재개 — *에디터는 계속 적용됩니다* |
+| **C** | 활성 이펙트 전부 지우기 |
+| **H** | 조작 패널 숨기기 |
 
-`range` and `minRange` are per ability, so the indicator's reach changes with the slot you have
-selected. Aiming closer than the selected ability's `minRange` tints it red and refuses the cast;
-set `minRange` to 0 if you would rather cast at your own feet, which is what every far cast ships
-with — a ward you cannot drop on yourself is missing half its uses. Cooldowns are per ability too,
-so spending one slot never locks the other out.
+`range` 와 `minRange` 는 능력별이라 선택한 슬롯에 따라 표시기 사거리가 바뀝니다. 선택 능력의 `minRange` 보다 가깝게 조준하면 빨갛게 물들고 시전을 거부합니다. 자기 발밑에 깔고 싶으면 `minRange` 를 0으로 두세요 — 모든 원거리 시전의 출고값이 그렇습니다. 자기 위에 못 떨어뜨리는 수호막은 쓸모가 반쪽이니까요. 쿨다운도 능력별이라 한 슬롯을 썼다고 다른 슬롯이 잠기지 않습니다.
 
 ---
 
-## Project layout
+## 프로젝트 구조
 
 ```
 src/
-  abilities/      Ability base class (the travelling front), WardAbility, AcidAbility,
+  abilities/      Ability 베이스 클래스(이동 전선), WardAbility, AcidAbility,
                   ArborBloomAbility, CyberSerpentAbility, VenomSurgeAbility,
                   MonolithRiftAbility, SumiTideAbility, AstralVoidAbility,
-                  BalefulCascadeAbility, CelestialRendAbility, pooling manager
-  animation/      FBX character loading, AnimationMixer, the per-ability cast clips,
-                  the procedural cast lunge
-  assets/         Procedural crystal and boulder geometry, the ribbon strip, and the
-                  per-ability geometry builders (monoliths, growth, shatter, rend, serpent)
-  config/         settings.js — the single source of truth for every parameter
-  core/           App, Renderer, CameraRig, Time, Layers, shared frame uniforms
-  effects/        Aim arrow, far-cast circle, ground decals, rift fissures, shatter
-                  plates, crater, kinetic warp, bursts, light pool, shake, flash
-  input/          InputManager (events) and AimController (both targeting shapes)
-  loaders/        AssetLoader with a shared LoadingManager
+                  BalefulCascadeAbility, CelestialRendAbility, 풀링 매니저
+  animation/      FBX 캐릭터 로딩, AnimationMixer, 능력별 시전 클립,
+                  절차적 시전 돌진
+  assets/         절차적 결정·바위 지오메트리, 리본 스트립, 능력별
+                  지오메트리 빌더(모놀리스, 성장, 파쇄, 천열, 서펜트)
+  config/         settings.js — 모든 파라미터의 단일 진실 공급원
+  core/           App, Renderer, CameraRig, Time, Layers, 공유 프레임 유니폼
+  effects/        조준 화살표, 원거리 시전 원, 바닥 데칼, 균열, 파쇄판,
+                  크레이터, 키네틱 워프, 버스트, 빛못, 흔들림, 섬광
+  input/          InputManager(이벤트), AimController(조준 2종)
+  loaders/        공유 LoadingManager를 쓰는 AssetLoader
   materials/      ObsidianMaterial, WardBarrierMaterial, WardGroundMaterial,
-                  AcidPoolMaterial, ToxicMistMaterial (the raymarched volume),
-                  the growth, serpent, venom, monolith, ink, astral, cascade
-                  and rend material sets
-  particles/      GPU particle system + engine and rate emitters
-  postprocessing/ Composer pipeline, grade shader, distortion shader
-  shaders/lib/    Shared GLSL: noise library, common helpers
-  ui/             HUD, lil-gui editor, preset manager, styles
-  utils/          Maths, colour cache, pooling, disposal, shader patching
-  world/          Environment (stage lighting), floor, dust, contact shadows
-  archive/        The retired four-element sandbox — see archive/README.md
+                  AcidPoolMaterial, ToxicMistMaterial(레이마칭 볼륨),
+                  성장·서펜트·맹독·모놀리스·먹·성간·연쇄·천열 머티리얼 세트
+  particles/      GPU 파티클 시스템 + 엔진, 방출기
+  postprocessing/ Composer 파이프라인, 그레이드 셰이더, 왜곡 셰이더
+  shaders/lib/    공유 GLSL: 노이즈 라이브러리, 공용 헬퍼
+  ui/             HUD, lil-gui 에디터, 프리셋 매니저, 스타일
+  utils/          수학, 색상 캐시, 풀링, 정리, 셰이더 패치
+  world/          Environment(무대 조명), 바닥, 먼지, 접촉 그림자
+  archive/        은퇴한 4원소 샌드박스 — archive/README.md 참고
 ```
 
 ---
 
-## How it fits together
+## 내부 동작 방식
 
-### Settings are the API
+### 설정이 곧 API입니다
 
-`src/config/settings.js` holds every tweakable value. Nothing else owns that state: shaders,
-particle systems, lights and post passes *read* those objects every frame. That is what makes the
-editor work with no rebuild — moving a slider changes the crystal field that is already standing,
-the next cast, the environment and the post stack at once. Preset loading deep-merges *into* the same
-objects so every live binding stays valid.
+`src/config/settings.js` 에 조정 가능한 모든 값이 있습니다. 다른 무엇도 그 상태를 소유하지 않습니다. 셰이더·파티클 시스템·조명·후처리 패스는 매 프레임 그 객체들을 *읽기만* 합니다. 그래서 에디터가 리빌드 없이 동작합니다 — 슬라이더를 움직이면 이미 서 있는 결정밭, 다음 시전, 환경, 후처리 스택이 한 번에 바뀝니다. 프리셋 로딩은 같은 객체에 딥머지되므로 살아있는 바인딩이 전부 유효합니다.
 
 ```js
 import { settings } from './config/settings.js';
-settings.venom.height = 7;        // visible on the next frame, even mid-cast
-settings.ward.zoneRadius = 8;     // re-flows a ward that is already standing
-settings.global.timeScale = 0.1;  // slow the whole cast to a crawl
+settings.venom.height = 7;        // 다음 프레임에 보임, 시전 중에도
+settings.ward.zoneRadius = 8;     // 이미 서 있는 수호막을 다시 펼침
+settings.global.timeScale = 0.1;  // 전체 시전을 기어다니게 늦춤
 ```
 
-Ability blocks are keyed by their id in `ELEMENTS`, and the shared systems that need to know
-"which ability is the player holding" — the aim controller, the cooldowns, the HUD — look it up as
-`settings[element]`. The four fields they rely on being present are `range`, `minRange`, `speed`
-and `cooldown`; a far cast adds a fifth, `zoneRadius`. Everything else in a block is that ability's
-own business.
+능력 블록은 `ELEMENTS` 의 id를 키로 쓰고, "플레이어가 지금 들고 있는 능력이 뭐지"가 필요한 공유 시스템(조준 컨트롤러, 쿨다운, HUD)은 `settings[element]` 로 조회합니다. 반드시 있어야 하는 필드는 `range`, `minRange`, `speed`, `cooldown` 4개, 원거리 시전은 `zoneRadius` 가 하나 더 있습니다. 나머지는 각 능력의 영역입니다.
 
-### The rule that makes "edit while paused" work
+### "일시정지 중 편집"이 성립하는 규칙
 
-A gem record in `VenomSurgeAbility` stores **only what the dice decided**: a position *fraction*
-along the line, a radial *fraction*, a yaw, and a handful of unitless jitters. Not one metre, radian
-or second is captured when the cast starts. Every dimension is resolved against `settings.venom`
-inside the update loop, which runs on a zero-length frame too.
+`VenomSurgeAbility` 의 결정 레코드는 **주사위가 정한 것만** 저장합니다. 선을 따른 위치 *비율*, 반경 *비율*, 요(yaw), 단위 없는 지터 몇 개. 시전이 시작될 때 미터·라디안·초는 단 하나도 확정하지 않습니다. 모든 치수는 업데이트 루프 안에서 `settings.venom` 기준으로 해결되며, 루프는 길이 0짜리 프레임에서도 돕니다.
 
-So dragging `height` re-grows a field that is already standing; dragging `lean` re-tilts it;
-dragging `clumping` re-packs it toward the centre line. The only values a record *does* capture
-are timestamps — the moment its own eruption was triggered. Those are events, not dimensions.
+그래서 이미 서 있는 결정밭도 `height` 를 드래그하면 다시 자라고, `lean` 을 드래그하면 다시 기울고, `clumping` 을 드래그하면 중심선으로 다시 모입니다. 레코드가 확정하는 값은 타임스탬프뿐입니다 — 그건 치수가 아니라 사건이니까요.
 
-The four *shape* controls (`facets`, `taper`, `gemRough`, `bend`) cannot be expressed as a
-per-instance transform, so they are baked into the geometry instead — and a seven-sided crystal is
-a couple of hundred triangles, cheap enough to regenerate outright rather than approximate in a
-vertex shader. `VenomSurgeAbility#_syncGeometry` hashes those four values and rebuilds the gem
-meshes when the hash changes, carrying the per-instance attributes across, which is what keeps them
-live sliders rather than restart-required constants.
+4개 *형상* 컨트롤(`facets`, `taper`, `gemRough`, `bend`)은 인스턴스 변환으로 표현할 수 없어 지오메트리에 직접 굽습니다. 7면 결정이 삼각형 수백 개라 버텍스 셰이더로 근사할 것 없이 통째로 재생성해도 쌉니다. `VenomSurgeAbility#_syncGeometry` 가 4개 값을 해시해 바뀌면 결정 메시를 재구성하고 인스턴스 속성은 그대로 들고 갑니다. 그래서 재시작 상수가 아니라 라이브 슬라이더로 남습니다.
 
-### Aiming
+### 조준
 
-`AimController` raycasts the pointer onto the ground plane **every frame**, not only on mouse
-move, so orbiting the camera with a cast armed swings the indicator under a stationary cursor. It
-clamps the distance into `[minRange, range]`, tracks a 0..1 reveal envelope, and emits a single
-`cast` event carrying an origin, a unit direction and a distance — which is exactly the signature
-`Ability#spawn` takes. It decides nothing about what the cast does.
+`AimController` 는 마우스 이동 때만이 아니라 **매 프레임** 포인터를 지면 평면에 레이캐스트하므로, 시전을 장전한 채 카메라를 돌리면 커서가 가만있어도 표시기가 그 밑에서 흔들립니다. 거리를 `[minRange, range]` 로 클램프하고 0~1 등장 엔벨로프를 추적한 뒤, 원점·단위 방향·거리 3개를 담은 `cast` 이벤트 하나를 쏩니다 — `Ability#spawn` 의 시그니처와 정확히 같습니다. 시전이 뭘 하는지는 정하지 않습니다.
 
-It runs on **real** time rather than the scaled simulation delta, so the indicator keeps animating
-while the sandbox is paused.
+스케일된 시뮬레이션 델타가 아니라 **실제** 시간으로 돌리므로 샌드박스가 일시정지 중에도 표시기는 계속 움직입니다.
 
-There are two indicators and one controller. Which one is drawn comes from
-`ELEMENT_META[element].cast` — `CastShape.LINE` or `CastShape.ZONE` — and that is the *only* thing
-the two shapes disagree about. Arming, clamping, validating, revealing and firing are shared, and
-both end in the same three-argument `cast` event, because from the targeting side a far cast is a
-line cast you only care about the far end of. That is why zone targeting needed no change in
-`Ability`, `AbilityManager` or `App`: `WardAbility` reads its centre as `pointAt(1)` and works
-outward from there.
+표시기는 2개, 컨트롤러는 1개입니다. 무엇을 그릴지는 `ELEMENT_META[element].cast` — `CastShape.LINE` 또는 `CastShape.ZONE` — 로 정하고, 두 형태가 다른 점은 *그것뿐* 입니다. 장전·클램프·검증·등장·발사는 공유하고 같은 3인자 `cast` 이벤트로 끝납니다. 조준 측면에서 원거리 시전은 끝점만 신경 쓰는 직선 시전이니까요. 그래서 구역 조준은 `Ability`, `AbilityManager`, `App` 을 하나도 안 바꿨습니다. `WardAbility` 는 중심을 `pointAt(1)` 로 읽고 거기서 바깥으로 펼칩니다.
 
-### The far-cast circle
+### 원거리 시전 원
 
-`ZoneIndicator` is the arrow's opposite number, and it is built out of the same two ideas: metres,
-and no textures.
+`ZoneIndicator` 는 화살표의 반대편 짝이며, 같은 두 아이디어로 만들었습니다. 미터, 텍스처 없음.
 
-The **footprint** is one quad whose fragment shader remaps UV into metres from the target, so the
-boundary stays 0.34 m thick whether the circle is 2 m or 8 m across. The band is deliberately the
-heaviest mark on screen — it is the whole message — and it is split about the nominal radius by
-`boundaryBias` rather than centred on it, so its *outer* lip stays honest about where the effect
-ends. Inside there is a rim-weighted wash, contour rings travelling outward, warped filaments and a
-reticle whose downrange arm is longer, because the quad carries the caster's yaw and that arm is
-therefore the heading.
+**발자국**은 UV를 표적 기준 미터로 다시 매핑하는 프래그먼트 셰이더를 얹은 쿼드 1장이라, 원 지름이 2m든 8m든 경계 띠 두께는 0.34m로 일정합니다. 띠는 화면에서 의도적으로 가장 무거운 표식입니다 — 그게 메시지 전부이니까요. 공칭 반경 중심이 아니라 `boundaryBias` 로 안팎을 나눠 *바깥* 입술이 이펙트가 끝나는 지점에 정직하게 걸리게 했습니다. 안쪽에는 림 가중 워시, 바깥으로 달리는 윤곽 고리, 뒤틀린 필라멘트, 아래쪽 팔이 긴 레티클이 있습니다. 쿼드가 시전자의 요를 들고 있어서 그 팔이 곧 진행 방향이기 때문입니다.
 
-The **reach ring** at the caster is the ribbon strip bent into a circle: `(t, side)` in,
-world position out. A quad big enough to hold a 20 m range would be 40 m across and shade a
-screenful of discarded fragments for one thin line.
+시전자 발밑 **도달 고리**는 리본 스트립을 원으로 구부린 것입니다. `(t, side)` 입력, 월드 위치 출력. 사거리 20m를 담는 쿼드는 40m짜리라 얇은 선 하나에 화면 가득 버려지는 프래그먼트를 셰이딩합니다.
 
-The circle **snaps out past its radius and settles back** when the cast is armed, and the trap does
-the same thing when it lands. A circle that grows linearly reads as a UI element; one that
-overshoots reads as something the caster did.
+시전을 장전하면 원이 반경을 **넘어섰다가 가라앉습니다**. 착탄 때도 트랩이 똑같이 합니다. 선형으로 커지는 원은 UI 요소처럼 읽히고, 오버슈트하는 원은 시전자가 한 짓처럼 읽힙니다.
 
-### The arrow is one SDF
+### 화살표는 SDF 1장입니다
 
-`AimIndicator` is a single ground quad. Its fragment shader remaps UV into **metres measured from
-the caster**, so every control in `settings.aim` is a real measurement — the shaft stays 0.42 m
-wide whether the cast is 3 m or 15 m long.
+`AimIndicator` 는 지면 쿼드 1장입니다. 프래그먼트 셰이더가 UV를 **시전자 기준 미터**로 다시 매핑하므로 `settings.aim` 의 모든 컨트롤이 실제 치수입니다. 시전이 3m든 15m든 자루 너비는 0.42m 그대로입니다.
 
-The silhouette is a rounded union of a box (the shaft) and iq's exact triangle SDF (the head);
-the cheap half-plane intersection leaves visible corner artefacts on a wedge this shallow. From
-that one distance field the shader derives the outline, the rim-weighted interior wash, the
-chevrons (a phase skewed by `|x|`, which turns flat bands into arrowheads pointing the way the
-cast does), the frost noise and voronoi plates, the ring at the caster's feet, the range cap arc,
-a six-fold frost rosette pinned to the impact point, and the sweep-out when the ability is armed.
+실루엣은 박스(자루)와 iq의 정확한 삼각형 SDF(촉)의 둥근 합집합입니다. 싼 반평면 교차는 이렇게 얕은 쐐기에서 모서리 결함이 눈에 띕니다. 그 거리장 1장에서 외곽선, 림 가중 내부 워시, 셰브론(`|x|` 로 위상을 비틀어 평평한 띠를 시전 방향 화살촉으로 만듦), 서리 노이즈와 보로노이 판, 시전자 발밑 고리, 사거리 끝 호, 착탄점의 6중 서리 로제트, 장전 때 쓸려나오는 등장까지 유도합니다.
 
-### The acid
+### 산성
 
-The Caustic Bloom is the only ability in the set built around a **volume** rather than around
-surfaces, and it is the one that answers a question the others never had to: what do you do
-when the effect is not a thing standing in the world but a region of the world that has been
-*changed*.
+부식 개화는 표면이 아니라 **부피**를 중심으로 만든 세트 유일의 능력입니다. 그래서 다른 능력들이 물을 필요가 없던 질문에 답합니다. 월드에 서 있는 *물건*이 아니라 바뀌어버린 월드의 *영역*은 어떻게 다루는가.
 
-The mist is **raymarched**, not billboarded. A cylinder of gas made out of camera-facing quads dies
-the moment the camera orbits — the cards turn with you, the silhouette never changes, and anything
-standing inside the cloud is either entirely in front of every card or entirely behind it. So
-`ToxicMistMaterial` marches it:
+먹구름은 **레이마칭**이지 빌보드가 아닙니다. 카메라를 도는 순간 카메라 바라보기 쿼드로 만든 가스 기둥은 죽습니다. 카드가 같이 돌고 실루엣이 안 바뀌며, 구름 안에 서 있는 것은 모든 카드 앞 아니면 모든 카드 뒤, 둘 중 하나가 됩니다. 그래서 `ToxicMistMaterial` 은 행진합니다.
 
-- **The mesh is a scissor, not the shape.** A closed cylinder drawn back faces only with the depth
-  test off, whose single job is to rasterise the pixels the volume could cover. Because a regular
-  polygon inscribes its circle, the proxy is scaled by `1 / cos(π / segments)` so it *circumscribes*
-  the analytic radius instead — without that the marched cloud has flats on its silhouette, which is
-  the one tell you cannot explain away.
-- **The span is analytic.** `cylinderSpan` solves the ray against an upright cylinder and clips it to
-  the height slab, giving an exact entry and exit distance. No depth peeling, no sorting, and it
-  stays correct with the camera inside the cloud.
-- **It is clipped against the scene.** The far end of the march is cut at the opaque depth prepass,
-  so a character standing in the aura is veiled by exactly the gas in front of them and none of the
-  gas behind them. That single line is the difference between an aura and a decal the character is
-  pasted on top of.
-- **It is lit from underneath.** The pool is the key light and it is *below* the gas, so emission
-  falls off with height and one tap toward the sun shades the crown. Light a cloud flat and it stops
-  being smoke over a chemical fire and becomes green fog.
+- **메시는 모양이 아니라 가위입니다.** 뒷면만 그리고 뎁스 테스트를 끈 닫힌 실린더로, 볼륨이 덮을 픽셀을 래스터라이즈하는 게 유일한 일입니다. 정다각형은 원에 내접하므로 프록시를 `1 / cos(π / segments)` 로 스케일해 해석적 반경에 *외접*시킵니다. 안 하면 행진한 구름 실루엣에 납작한 면이 생기는데, 그건 변명이 안 되는 티입니다.
+- **구간은 해석적입니다.** `cylinderSpan` 이 광선을 직립 실린더에 풀고 높이 슬래브로 잘라 정확한 진입·종료 거리를 줍니다. 뎁스 필링도 정렬도 없고, 카메라가 구름 안에 있어도 맞습니다.
+- **장면에 클리핑됩니다.** 행진 끝을 불투명 뎁스 프리패스로 잘라 오라 안에 선 캐릭터는 앞쪽 가스만큼만 가려지고 뒤쪽 가스는 하나도 안 묻습니다. 그 한 줄이 오라와, 캐릭터를 위에 붙인 데칼의 차이입니다.
+- **밑에서 조명됩니다.** 웅덩이가 키라이트고 *가스 아래*에 있으므로 발광은 높이 따라 감쇠하고, 태양 쪽으로 한 탭이면 꼭대기가 음영집니다. 구름을 평평하게 비추면 화학 화재 위 연기가 아니라 녹색 안개가 됩니다.
 
-Cost is honest and dialled: `mistSteps` samples of a three-octave fbm plus one shadow tap, empty
-space skipped before any noise is evaluated, the march stopped as soon as the volume is opaque, and
-the step count is a **live slider** — the same build runs on a laptop and on the machine driving the
-projector.
+비용은 정직하게 다이얼됩니다. 3옥타브 fbm의 `mistSteps` 샘플 + 섀도우 탭 1개, 노이즈 평가 전에 빈 공간 스킵, 볼륨이 불투명해지면 행진 중단, 스텝 수는 **라이브 슬라이더** — 노트북과 프로젝터 머신이 같은 빌드로 돕니다.
 
-The **pool** is the counterweight. It is alpha blended rather than additive, because acid has to eat
-the floor and additive can only ever add; its crazing is a two-nearest voronoi *edge* network, which
-forks and meets at proper junctions where a threshold on a distance field gives round blobs; and it
-carries a real specular lobe off a world-space gradient of its own height field. Everything else on
-this stage is rough, and that gloss is the cheapest thing in the project that says *liquid* — take
-it out and the pool is scorched rock that happens to be green. Its boundary is pushed around by a
-noise on the bearing and bitten into by a second one, because a clean disc reads as a decal no
-matter what is drawn inside it.
+**웅덩이**가 균형추입니다. 더하기만 할 수 있는 애디티브로는 바닥을 먹어야 하는 산이 안 되므로 알파 블렌딩입니다. 미친 듯 갈라짐은 2최근접 보로노이 *모서리* 망이라 거리장 임계값의 둥근 얼룩과 달리 갈라지고 만나는 분기점이 제대로 섭니다. 자기 높이장의 월드 공간 그라디언트로 진짜 스페큘러 로브를 들고 갑니다. 무대의 다른 모든 것은 거친데 그 광택이 *액체*라고 말해주는 제일 싼 요소입니다. 빼면 웅덩이는 녹색인 우연한 그을린 바위가 됩니다. 경계는 방위 노이즈로 밀리고 두 번째 노이즈가 파먹습니다. 안에 뭘 그렸든 깨끗한 원반은 데칼로 읽히니까요.
 
-Gas coming off the surface is drawn **in the pool shader**, not with particles: `surfaceBoil` gives
-every cell of a jittered grid its own clock and its own size and draws the expanding rim of one
-bubble breaking the surface. Nine cheap hashes per pixel, no two cells ever in step, and it replaces
-an emitter outright.
+표면에서 올라오는 가스는 파티클이 아니라 **웅덩이 셰이더**에서 그립니다. `surfaceBoil` 이 지터된 격자의 매 셀에 자기 시계·자기 크기를 주고 표면을 깨고 나오는 거품 1개의 팽창 림을 그립니다. 픽셀당 싼 해시 9개, 두 셀이 같은 박자를 타는 일 없이 이미터 1개를 통째로 대체합니다.
 
-The bubbles that do get particles needed a new silhouette, so `ParticleShape.BUBBLE` was added to the
-shared system: a film is only visible where you look *through* it edge-on, so the shape is a thin
-ring rather than a disc, with a little of the far wall left across the middle, a hard white
-catchlight from the key and a soft bounce off the pool below. It does not fade out either — in the
-last of its life the film springs outward, thins and tears, which is the only ending a bubble has.
+파티클이 필요한 거품은 새 실루엣이 필요해서 공유 시스템에 `ParticleShape.BUBBLE` 을 추가했습니다. 막은 *뚫어지게* 볼 때 가장자리에만 보이므로 디스크가 아니라 얇은 고리 모양에, 가운데 살짝 남은 뒷벽, 키의 하드 화이트 캐치라이트, 아래 웅덩이의 부드러운 바운스를 얹습니다. 페이드아웃도 안 합니다. 수명 끝에 막이 바깥으로 튀며 얇아지고 찢어집니다. 거품의 유일한 끝이니까요.
 
-**The boil is what makes the five passes one thing.** Where the Ward has a heartbeat, this has a
-sum of three sines at incommensurate frequencies (1, φ, 1+√2) raised to `boilSharp` — an envelope
-with no period, which spends most of its time near zero and spikes. A heartbeat is *supposed* to be
-regular; a chemical reaction very much is not, and within the six seconds an aura stands the surge
-never lands twice on the same rhythm. It is evaluated once per frame and handed to every material,
-the light, the emitters and the camera; when a surge crosses `boilThreshold` on the way up the aura
-**vents** — a gout of gas off the whole pool, a ring pushed across it and a knock on the camera.
-Set `boilDepth` to zero and the whole thing flatlines, every pass at once.
+**끓음이 다섯 패스를 하나로 묶습니다.** 수호막에 고동이 있다면 이쪽은 서로소 주파수(1, φ, 1+√2) 3사인의 합을 `boilSharp` 로 올린 봉투입니다 — 주기가 없는 봉투라 대부분 시간은 0 근처에 있다가 튑니다. 고동은 규칙적이어야 *합니다*. 화학 반응은 전혀 그렇지 않고, 오라가 서 있는 6초 안에 서지는 같은 리듬에 두 번 안 옵니다. 프레임당 한 번 평가해 모든 머티리얼·조명·이미터·카메라에 건넵니다. 서지가 `boilThreshold` 를 위로 넘으면 오라가 **분출**합니다 — 웅덩이 전체에서 가스 한 줄기, 가로지르는 고리, 카메라 한 방. `boilDepth` 를 0으로 두면 전체가 한 번에 납작해집니다. 모든 패스가 동시에요.
 
-### The growth
+### 성장
 
-The Arborist's Growth Chrono-Summon is the only ability in the set that is not a *strike*. Everything
-else in the sandbox reaches: it travels down a line, it lands, and `DummyField` reads the volume it
-covered and fells whatever was standing in it. A summon does not reach. It stands there and picks —
-so this one answers `handlesOwnHits`, the field leaves it alone, and it asks who is nearby, marks
-one, charges on it, and fires. The cut is not an effect layered on top of the kill; it *is* the kill.
+수목가의 성장 시간소환수는 세트에서 *타격*이 아닌 유일한 능력입니다. 샌드박스의 다른 모든 것은 닿습니다. 선을 타고 내려가 착탄하고, `DummyField` 가 덮은 부피를 읽어 서 있던 것을 쓰러뜨립니다. 소환수는 닿지 않습니다. 서서 고릅니다. 그래서 `handlesOwnHits` 에 답하고, 필드는 내버려두고, 근처에 누가 있나 물어 표시하고 돌진해 발사합니다. 절단은 처치 위에 얹는 이펙트가 아니라 처치 *그 자체* 입니다.
 
-**The tendrils and their foliage are one shape.** A leaf is not decoration scattered near a stem, it
-is *clipped to* one. The tube and the blades include the same `vinePoint` / `vineFrame` /
-`vineRadius` block and are handed the same uniform boxes by identity, so a leaf resolves the exact
-stem position the tube resolved, on the same frame, from the same numbers. Drag `curl turns` while a
-summon is standing and three hundred leaves curl with the wood. The alternative is to bake the stems
-— and lose the live controls — or to read geometry back off the GPU, and lose the frame.
+**덩굴손과 잎은 한 몸입니다.** 잎은 줄기 근처 흩뿌린 장식이 아니라 줄기에 *클리핑*됩니다. 튜브와 날개는 같은 `vinePoint` / `vineFrame` / `vineRadius` 블록을 품고 같은 유니폼 박스를 id로 받으므로, 잎은 튜브가 해결한 줄기 위치를 같은 프레임에 같은 숫자로 해결합니다. 소환수가 서 있는 동안 `curl turns` 를 드래그하면 잎 300개가 목재와 함께 말립니다. 대안은 줄기를 굽는 것 — 라이브 컨트롤 상실 — 이나 GPU에서 지오메트리를 읽어오는 것 — 프레임 상실 — 입니다.
 
-There is no path buffer and no CPU pass at all. `vinePoint(vine, t)` is analytic: a bearing, a radius
-that bows out at the waist and draws back in under the bloom, a rise curve, a twist, and a spiral
-that tightens over the last third — which is the one term that says *grown* rather than *extruded*.
-The frame that rides it takes its reference axis from the stem's own outward radial rather than from
-world up, because the usual trick flips somewhere up a tendril that passes through vertical, and a
-frame that flips between two rows of a tube twists every quad between them into a bow tie.
+패스 버퍼도 CPU 패스도 없습니다. `vinePoint(vine, t)` 는 해석적입니다. 방위, 허리에서 부풀었다가 꽃 아래 다시 좁아지는 반경, 상승 곡선, 비틀림, 마지막 1/3에서 조여드는 나선 — 마지막 항 하나가 *압출*이 아니라 *성장*이라고 말합니다. 타고 가는 프레임은 월드 업이 아니라 줄기 자체의 바깥 법선에서 기준축을 취합니다. 수직을 지나는 덩굴손에서 요령이 뒤집히고, 뒤집힌 프레임은 튜브 두 행 사이 모든 쿼드를 나비넥타이로 비틀기 때문입니다.
 
-**The bloom opens by animating one angle.** A petal is a bent, cupped, twisted sheet placed on an arc
-— `p(u) = centre + (out·sin a + up·cos a)·(len·u)` with `a = pitch + curve·u` — so a petal that starts
-at 20° and curves 90° is standing at its base and folded back at its tip, which is what an open
-flower actually does. `uOpen` runs 0 → 1 and interpolates every petal's pitch from the bud's to its
-whorl's, outer whorls leading. There is no second pose and nothing is blended. The read of a flower
-is entirely in how the whorls *stack*, and that stack is three vec3s.
+**꽃은 각도 1개로 벌어집니다.** 꽃잎은 호 위에 놓인 구부러지고 오목하고 비틀린 판 — `p(u) = centre + (out·sin a + up·cos a)·(len·u)`, `a = pitch + curve·u` — 라서 20°에서 시작해 90° 휘는 꽃잎은 밑동은 서고 끝은 뒤로 젖혀집니다. 벌어진 꽃이 실제로 하는 짓입니다. `uOpen` 이 0→1로 가며 모든 꽃잎의 피치를 봉오리에서 자기 소용돌이로 보간하고 바깥 소용돌이가 이끕니다. 두 번째 포즈도 블렌딩도 없습니다. 꽃의 읽힘은 소용돌이 *쌓임* 전부이고, 그 쌓임은 vec3 3개입니다.
 
-**These are lit materials, not additive shaders**, which is the split that separates this ability
-from every other one here. Fire and lightning *are* light; wood is matter, and matter that does not
-sit in the sun, take a shadow and occlude what is behind it reads as a decal wrapped around the scene
-however good its silhouette is. So the tendrils, the foliage and the petals are
-`MeshStandardMaterial` with their vertex stage replaced: three's shading model, our geometry. Two
-things fall out of that and both are load-bearing — the shadow pass needs the *same* vertex stage
-(each material hands back a matching `MeshDepthMaterial` for the mesh's `customDepthMaterial`), and
-the model matrix must stay identity, because the vertex stage writes world positions.
+**이들은 애디티브 셰이더가 아니라 조명받는 머티리얼입니다.** 이 능력을 여기 다른 모든 것과 가르는 분기점입니다. 불과 번개는 *빛 그 자체*이고, 목재는 물질입니다. 태양 아래 앉고 그림자를 받고 뒤를 가리지 않는 물질은 장면에 두른 데칼로 읽힙니다.
 
-They also need a layer of their own. `LAYER.SHAPED` exists because the depth prepass draws the whole
-world layer with one `overrideMaterial`, which would rasterise the raw parameter buffer — a
-metre-wide sheet at the origin — straight into the soft-particle depth buffer. The shadow map is the
-one pass where three honours `customDepthMaterial`, so the summon casts properly and stays out of the
-prepass.
+### 에디터와 프리셋
 
-There is a second three.js footgun in the same neighbourhood, and it cost a debugging session worth
-recording: three keys its **program cache** off `customProgramCacheKey()`, whose default is
-`onBeforeCompile.toString()` — and `patchOnBeforeCompile` installs a function with the *same* source
-text on every material it touches. Three materials that patch the same base with the same parameters
-therefore shared one compiled program, and the second and third silently rendered with the first
-one's shader. Nothing errors; the petals simply came out as more tendrils. `patchOnBeforeCompile` now
-folds the patch's own source into the key, which fixes it for every caller in the project.
+![HUD와 lil-gui 에디터를 연 채로 살아있는 시전을 옆에 둔 샌드박스](docs/screenshots/editor.jpg)
 
-**The sigil is drawn in metres from its own centre**, not in quad space: drag `footprint radius`
-while a summon is standing and the mark re-scales with its strokes the same physical width and the
-same number of runes per metre of arc. The runes are *generated* — every cell hashes its own subset
-out of a nine-stroke alphabet, so the ring carries genuinely non-repeating script and moving `runes`
-re-cuts all of them. Fine detail is faded by the world-space pixel footprint and every band's width
-is floored at it with the brightness scaled back to match, which is what stops a floor full of thin
-bright rings turning into a bolt of white speckle across the far half of the stage.
+**G** 를 누르면 패널이 옵니다. 폴더: 프리셋, 전역, 조준 표시, 원거리 시전 원, 화산 수호막, 부식 개화, 수목가의 성장, 사이버 서펜트, 결정화 맹독 쇄도, 브루탈 대지 폭발, 수묵 조류, 성간 공허 폭발, 재앙의 연쇄, 천열, 환경, 후처리, 카메라, 캐릭터, 허수아비 표적. 모든 폴더는 접힌 채로 시작합니다 — 하나만 펴도 나머지가 화면 밖으로 밀릴 만큼 컨트롤이 많습니다.
 
-**The lance is one draw call for the whole volley.** Every shot is an instance of the same tube
-reading its two endpoints and its own clock out of a small uniform array, so four bodies going down
-at once costs what one does. It does not fade up: it arrives, in the first tenth of its life, as a
-point that reaches the target — and the cut lands on the frame its *head* gets there rather than on
-the frame it was fired. Fifty milliseconds apart, and worth every one of them.
+- **전역** 배율은 모든 것을 한 번에 스케일합니다(속도, 발광, 노이즈, 파티클, 조명, 충격 강도, 카메라 흔들림, 시간 배율…).
+- **조준 표시** — 화살표 실루엣(미터), 외곽선과 채움, 셰브론과 서리, 고리와 로제트.
+- **원거리 시전 원**(40 컨트롤) — 경계 띠, 내부, 눈금·스윕·레티클, 도달 고리, 스냅아웃. 모든 원거리 시전의 공유물이라 특정 능력이 아니라 조준 쪽에 편철됩니다.
+- **화산 수호막**(230 컨트롤, 색상 45개) — 시전과 발자국, 모든 것이 따라 뛰는 고동, 기준 시트의 패스별 폴더 1개씩: 장벽, 바닥, 흑요석, 룬 띠, 코어 플레어, 열기 아지랑이, 불씨/재/혈흔/연기, 동적 광원.
+- **부식 개화**(203 컨트롤, 색상 38개) — 시전, 모든 패스가 따라 끓는 끓음 봉투, 산성 웅덩이, 레이마칭 독가스, 밑 고리, 부식 반짝임, 거품과 부유 입자, 안개와 튐, 바닥 표식, 던지기·개화·유지, 동적 광원.
+- **결정화 맹독 쇄도**(194 컨트롤, 색상 36개) — 시스템별이 아니라 5패널 분석 시트대로 편철되어 한 층을 보려면 폴더 하나만 열면 됩니다. *1 결정*(이음매, 별폭발, 결정 1개, 분출, 자수정), *2 가스*, *3 물방울*(밑에 공중 반짝임), *4 균열*(판, 선을 따른 표식), *5 발광*(심, 밑에 후광), 다음 일격과 조명. `slab*` 중 *재절단* 표시 4개가 보로노이를 다시 자릅니다. 판의 다른 모든 컨트롤은 이미 바닥에 누운 것을 다시 빚습니다.
+- **브루탈 대지 폭발**(195 컨트롤, 색상 25개 — 설정 블록 값마다 1개, 숨김 없음) — 5패널 분석 시트대로 편철: *1 모놀리스*(균열, 군집, 판 1장, 분출, 석재 표면), *2 시멘트 먼지*(밑에 구르는 고리), *3 기하 파편*(자갈·부유 가루 포함), *4 균열 흉터*(크레이터, 균열, 선을 따른 표식), *5 키네틱 공기*, 다음 일격과 조명. *판 1장* 아래 형상 컨트롤 7개가 지오메트리를 다시 자릅니다. 나머지는 이미 서 있는 돌을 다시 빚습니다. 각 패널은 단독으로 0까지 내려 다른 층을 심판할 수 있습니다 — `density` 가 돌을 비우고, `dustOpacity` 가 공기를 치우고, `shrapnelCount` 가 잔해를 멈추고, `warpStrength` 가 굴절을 끕니다.
+- **프리셋**은 `localStorage` 에 저장되며, 복제·삭제·JSON 내보내기·JSON 가져오기·출고 기본값 초기화를 지원합니다.
 
-**The cut itself** is one plane and one clone (`combat/Dummy.js`). The body's mesh is duplicated,
-each copy is told which side of the plane it keeps with a `discard`, and each gets its own solver
-seeded with only the joints that half actually owns — leave the legs in the torso's solver and they
-land on the floor holding an invisible pelvis a metre in the air. Because the material has been
-double-sided since birth the far wall of the shell is already being rasterised, so painting *that* as
-the interior is the whole of the cross-section: no cap geometry, no re-tessellation, right from every
-angle for free. The plane lives in the geometry's **bind** space — the one space no bone can move —
-so a cut measured at the waist stays at the waist however far the corpse folds. The two halves are
-then made solid to each other (`collideRagdolls`), because two solvers that know nothing of each
-other let the torso fall straight through the legs it was cut off.
+모든 능력은 그리는 **모든** 색상을 노출하고, 어떤 것도 다른 것에서 파생되지 않습니다. 결정 팔레트, 수호막의 막과 룬 띠, 산성 웅덩이와 위 가스, 바닥 표식, 충격 셸, 충격파 고리, 화면 섬광, 파티클 시스템마다 4정점 수명 그라데이션(탄생 → 초반 → 후반 → 소멸)까지. 결정을 건드리지 않고 안개만 물들이거나, 룬은 빨갛게 둔 채 불씨만 주황으로 식히는 게 피커 한 번 거리입니다.
 
+프리셋은 설정 트리의 일반 스냅샷이라 내보낸 파일을 손으로 읽고 고칠 수 있습니다.
 
-### The cascade
+각 능력을 가장 크게 빚는 노브들입니다. 처음 손댈 것들이라 적어둡니다.
 
-The Baleful Cascade Mark is the second cast that picks its own targets, and the only one that
-**spends something to do it**. The crown of blades standing over the mark is a magazine: throwing one
-takes it out of the crown, the gap is visible, and it grows back over `crownRegrow`. Fire faster than
-that and the burst visibly thins; leave it alone and it fills back in. It costs one float per blade
-and it is the whole difference between a thing spending itself and a turret with an infinite belt.
-
-**The crown is dealt on the CPU, and that is deliberate.** Everywhere else in this project the shape
-lives in the shader — the Chrono-Summon derives a tendril's bearing from its instance index and never
-tells anyone where it ended up, which is right for something that only has to be drawn. This ability
-has to *throw* a blade, so it has to answer a question a shader cannot: **where is the point of blade
-seventeen**. So `_dealCrown` writes `aDir` and `aShape` every frame, resolved from the live settings
-on the frame they are read, and `_bladeTip` reads the answer straight back out of the buffer the
-draw is about to use. Nothing is captured at spawn and dragging a slider still re-cuts a crown that
-is already standing; the deal simply happens on the other side of the bus. It is a few hundred float
-writes a frame, and it buys the one thing the layer is for.
-
-Which blade goes is chosen the same way: `_pickBlade` takes the blade already pointing nearest the
-body, so what arrives is what was standing there a frame earlier rather than a projectile the crown
-happened to spawn. The three populations — long spears for the silhouette, blades for the body,
-short shards to skirt the middle — are dealt by walking a Fibonacci spiral with a **stride coprime to
-its length**. Consecutive indices on that spiral sit at nearly the same latitude, so taking the
-populations as three blocks of it would put every spear round one pole; the coprime walk keeps the
-counts exact and scatters each population over the whole sphere.
-
-**One blade, two materials.** The crown and the volley are handed the same uniform block by identity,
-so a shot is drawn with the section, the taper, the facets and the palette of the crown it left.
-A thrown blade drawn by a second, similar shader reads as a projectile; this one reads as the crown
-coming apart. The section is a **lens** rather than a circle — the thickness is pinched to nothing at
-the two angles where the width is greatest — so the blade has a sharp edge down each side and a spine
-ridge along each face, and `flatShading` lets every one of the eight facets take the key light on its
-own. It is not a style choice: smooth-shaded, at forty instances, the burst is a bundle of carrots.
-
-**Only the last blade of a flurry is lethal.** The ones before it go through the body, draw sparks
-off it and change nothing. A body that comes apart on the first of three arrivals leaves the other
-two hitting a corpse, and three that land on the same frame read as one blade with a rendering bug.
-The cut itself lands on the frame the blade's *point* reaches the body — a fifth of a second after it
-was thrown, at the shipped numbers — and the blade keeps going out the other side, which is what
-makes it a cut rather than an impalement.
-
-**What went wrong first, twice.** The burst came out as a white star-shaped hole in the frame, and
-neither time was it the bloom (which is at 0.03 in this project and was never the problem). It was
-the *area* terms of the blade's own emissive. A rim, a vein field and a bleed from the heart each
-cover the whole surface; an edge term covers two columns of it. Summed at similar weights the areas
-win everywhere, the stone underneath stops mattering and the silhouette — the entire read of the
-reference sheet's third panel — goes with it. The shipped balance is the edge at 0.5 with a power of 14
-and every area term at or under 0.3, with a hard soft-ceiling behind them as a guard rather than as
-the mechanism. If a lit ability solid in this project ever goes white, turn the area terms off first and
-put them back one at a time; the ceiling will not save you, because by the time it engages the blade
-is already a lamp.
-
-### Adding another ability
-
-1. Add a settings block in `config/settings.js` and an entry in `ELEMENTS` / `ELEMENT_META`.
-2. Subclass `Ability` and implement `createShaders`, `createParticles`, `onTravel`, `onImpact`,
-   `onFade`.
-3. Register the class in `abilities/AbilityManager.js`.
-4. Add an editor folder in `ui/Editor.js`, and a sigil in `ui/glyphs.js`.
-5. Bind a key in `input/InputManager.js` — it emits `ability` with the 0-based slot index, which
-   `App` maps through `ELEMENTS`.
-
-To make it a **far cast** instead of a line cast, add two things and nothing else: `cast:
-CastShape.ZONE` in its `ELEMENT_META` entry, and a `zoneRadius` in its settings block. The circle
-indicator, the reach ring, the snap-out and the whole targeting loop come for free, and the ability
-reads its centre as `pointAt(1)`.
-
-Everything else — pooling, the travelling front, the local frame, lights, phases, per-ability
-cooldowns, the aim reach and camera framing — is inherited or driven off `ELEMENTS`. The HUD
-builds its slots from that array, so a new ability appears in the bar on its own.
-
-### Particles
-
-`particles/ParticleSystem.js` is a GPU-simulated, instanced-quad system. Motion (velocity, gravity,
-analytic drag, curl turbulence, vortex swirl), size-over-lifetime, the colour gradient and alpha
-fade are all evaluated in the shader from per-instance attributes; the CPU only ever writes spawn
-data, and only the slots that changed are uploaded. Particles live in a ring buffer, so spamming
-the ability recycles slots instead of allocating. Silhouettes (soft, smoke, streak, leaf, chip,
-ring) are procedural — there are no sprite textures anywhere in the project.
-
-The Venom Surge uses three systems: **gas** (non-additive, so the cloud genuinely occludes the gems
-behind it and the cluster keeps its depth), **droplets** (lit, under gravity, flung out of the break
-and arcing back down) and **motes** (additive, tiny — the airborne glitter that sells the gems as
-faceted).
-
-The Volcanic Ward uses four: **embers** rising off the obsidian, **ash**, **gore** splash, and the
-non-additive **smoke** off the shattered floor. Its embers are emitted from several points around
-the ring each frame rather than one: a ward sheds along its whole boundary, and a single origin
-makes every batch read as a starburst.
-
-The Brutalist Earth Blast is the one that works a system twice: its **dust** is both the rolling
-ground ring and the plume climbing behind it — the same non-additive smoke, thrown two different
-ways — while its **shrapnel** is real instanced rock rather than particles at all, because it has to
-tumble, bounce and be left lying where it lands.
-
-### Render pipeline
-
-Per frame:
-
-1. **Depth prepass** — the opaque world into a half-res packed-depth buffer. Every VFX shader
-   samples it for soft intersections, so nothing cuts a hard line into the ground. The crystals and
-   the monoliths sit on `LAYER.WORLD`, so mist and glitter fade softly against them.
-2. **Distortion pass** — meshes on the distortion layer write screen-space UV offsets into a second
-   half-res buffer. The ward's heat haze, the Rift's kinetic air and the Void Blast's gravitational
-   lens all write into it.
-3. **Composer** — scene → refraction warp → bloom → tone map (ACES) → grade.
-
-The grade pass folds chromatic aberration, lift/gain/contrast/saturation/temperature, vignette,
-film grain and the impact flash into one resample.
-
-Shadows come from a single directional light whose orthographic shadow camera is re-centred on the
-character each frame and fitted to a 52 m box at 4096² (~1.3 cm/texel). The `three/addons` CSM
-module was tried first and removed: it replaces three's `lights_fragment_begin` chunk *globally*,
-so any material not explicitly registered with it silently loses all directional lighting.
-
-Contact shadows are a real render: the character's depth is captured from below into a 256²
-target, blurred twice and projected onto the ground.
+- `venom.heightCurve` — 램프가 얼마나 늦게 오르는지. 올리면 이음매가 낮게 깔리다 표적에서 폭발합니다. `venom.frontBias` 를 1 밑으로 두면 결정이 착탄점으로 모입니다.
+- `ward.zoneRadius` — 원거리 시전 전체가 올라선 숫자 1개. 조준 원, 막, 룬 띠, 깨진 바닥, 모놀리스 고리를 함께, 라이브로 키웁니다. 다음은 모든 패스가 따라 뛰는 고동의 `ward.bpm` 과 `ward.beatDepth` 입니다. `beatDepth` 를 0으로 두면 수호막이 납작해집니다. 모든 패스가 한 번에요.
+- `quake.density` 와 `quake.warpStrength` — 크레이터에서 돌이 얼마나 올라오고, 폭발 뒤 공기를 얼마나 세게 밀어내는지. 그 능력의 각 패널은 단독으로 0까지 내려 층끼리 심판할 수 있습니다.
+- `zone.boundary` 와 `zone.snap` — 원거리 시전 원 가장자리가 얼마나 두껍게 읽히고, 나가는 길에 얼마나 세게 오버슈트하는지. 둘 사이가 그 표시기를 UI 오버레이처럼 느끼게 할지 시전자가 한 짓처럼 느끼게 할지 정합니다.
 
 ---
 
-## Editor and presets
+## 성능 노트
 
-![The sandbox with its HUD and the lil-gui editor open beside a live cast](docs/screenshots/editor.jpg)
+- 능력·데칼·버스트·파티클은 종류별 풀링입니다. 같은 자리 12연속 시전도 능력 인스턴스 **4개**까지만 만들고 할당을 멈춥니다.
+- 결정밭 전체는 결정 수와 무관하게 드로우 콜 몇 개 — 결정은 개당 인스턴스가 아니라 형태 변형별 인스턴스입니다.
+- 사이버 서펜트 궤적은 고스트 수와 무관하게 인스턴스 리본 스트립 **1개**입니다. 패스가 CPU를 안 타서 궤적 수는 거의 공짜입니다.
+- 원거리 시전 조준 원은 드로우 콜 2개: 쿼드 1장 + 고리 스트립 1개.
+- 6개 동적 점광원은 부팅 때 만들어 강도 0에 주차합니다. 더하고 빼면 머티리얼 전부가 3번씩 재컴파일됩니다.
+- 장면을 여러 번 그리지만 섀도우 맵은 프레임당 정확히 1번 갱신됩니다.
+- 부팅 중 `renderer.compileAsync()` 가 돌아 첫 시전이 셰이더 컴파일에 덜컥이지 않습니다.
+- 픽셀비는 1.75 상한, 뎁스·왜곡 버퍼는 절반 해상도입니다.
 
-Press **G** for the panel. Folders: Presets, Global, Aim indicator, Far-cast circle, Volcanic Ward,
-Caustic Bloom, Arborist's Growth, Cyber Serpent, Crystallized Venom Surge, Brutalist Earth Blast,
-Sumi Tide, Astral Void Blast, Baleful Cascade, Celestial Rend, Environment, Post processing, Camera,
-Character, Target dummies. Every folder starts collapsed — there are enough controls here that one open
-section pushes the rest off the screen.
+동시 4시전 — 슬롯 출처 무관 풀 상한 — 을 기준으로 예산을 잡고, `AbilityManager` 의 `MAX_CONCURRENT` 가 넘으면 원소 무관하게 가장 오래된 것부터 은퇴시킵니다. 원거리 시전 원 장전은 드로우 콜 2개가 듭니다.
 
-- **Global** multipliers scale everything at once (speed, glow, noise, particles, lights, impact
-  intensity, camera shake, time scale…).
-- **Aim indicator** — the arrow's silhouette in metres, its outline and fill, the chevrons and
-  frost, and the rings and rosette.
-- **Far-cast circle** (40 controls) — the boundary band, the interior, the ticks, sweep and
-  reticle, the reach ring, and the snap-out. Shared by every far cast, so it is filed with the
-  targeting rather than with any one ability.
-- **Volcanic Ward** (230 controls, 45 of them colours) — the cast and its footprint, the heartbeat
-  everything is driven off, then one folder per pass of the reference sheet: the barrier, the floor,
-  the obsidian, the rune bands, the core flare, the heat haze, embers/ash/gore/smoke, and the
-  dynamic light.
-- **Caustic Bloom** (203 controls, 38 of them colours) — the cast, the boil envelope every pass is
-  driven off, the acid pool, the raymarched toxic mist, the base ring, the corrosive shimmer,
-  bubbles & motes, fog & splatter, the marks on the ground, throw/bloom/hold, and the dynamic
-  light.
-- **Crystallized Venom Surge** (194 controls, 36 of them colours) — filed as the five panels of
-  its breakdown sheet rather than by system, so judging one layer is a matter of opening one
-  folder: *1 Crystals* (the seam, the starburst, one gem, the eruption, the amethyst), *2 Gas*,
-  *3 Droplets* (with the airborne glitter under it), *4 Cracks* (the plate, and the marks laid
-  along the line), *5 Glow* (the kernel, and the halo under it), then the strike and the light.
-  The four `slab*` controls marked *re-cuts* rebuild the Voronoi; every other control on the
-  plate reshapes one that is already lying on the floor.
-- **Brutalist Earth Blast** (195 controls, 25 of them colours — one per value in its settings
-  block, with nothing hidden) — filed as the five panels of its breakdown sheet: *1 Monoliths*
-  (the rift, the cluster, one slab, the eruption, the stone surface), *2 Cement dust* (with the
-  rolling ring under it), *3 Geometric shrapnel* (with grit and suspended powder), *4 Fissure
-  scars* (the crater, the cracks, the marks along the line), *5 Kinetic air*, then the strike and
-  the light. The seven shape controls under *One slab* re-cut the geometry; everything else
-  reshapes stone that is already standing. Each panel can be taken to zero on its own to judge the
-  others — `density` empties the stone, `dustOpacity` clears the air, `shrapnelCount` stops the
-  debris, `warpStrength` switches off the refraction.
-- **Presets** save to `localStorage`, and can be duplicated, deleted, exported to JSON, imported
-  from JSON, or reset to the shipped defaults.
-
-Every ability exposes **every** colour it draws with, and none is derived from another: the crystal
-palette, the ward's membrane and its rune bands, the acid pool and the gas above it, the ground
-marks, the impact shells, the shockwave rings, the screen flashes, and a four-stop lifetime gradient
-(`birth → early → late → death`) for each particle system. Tinting the fog without touching the
-crystals, or cooling the embers to orange while the runes stay red, is a picker away.
-
-Presets are plain snapshots of the settings tree, so an exported file is readable and editable by
-hand.
-
-Knobs worth knowing about, because they reshape their ability the most:
-
-- `venom.heightCurve` — how late the ramp climbs; raise it and the seam stays low until it explodes
-  at the target. `venom.frontBias` below 1 crowds the gems toward the impact point.
-- `ward.zoneRadius` — the one number the whole far cast is built on. It resizes the targeting
-  circle, the membrane, the rune bands, the shattered floor and the ring of monoliths together,
-  live. After that, `ward.bpm` and `ward.beatDepth` carry the heartbeat every pass is driven off:
-  take `beatDepth` to zero and the ward flatlines, every pass at once.
-- `quake.density` and `quake.warpStrength` — how much stone comes up out of the crater, and how hard
-  the air is shoved aside behind the blast. Each panel of that ability can be taken to zero on its
-  own, which is how you judge one layer against the others.
-- `zone.boundary` and `zone.snap` — how thick the far-cast circle's edge reads, and how hard it
-  overshoots on the way out. Between them they decide whether the indicator feels like a UI overlay
-  or like something the caster is doing.
+실시간 카운터(FPS, 살아있는 파티클, 인스턴스, 드로우 콜)는 HUD 오른쪽 위에 있습니다.
 
 ---
 
-## Performance notes
+## 아카이브
 
-- Abilities, decals, bursts and particles are pooled, per type. Twelve casts in a row build at most
-  **four** instances of an ability and then stop allocating.
-- A whole crystal field is a handful of draw calls regardless of crystal count — the gems are
-  instanced per shape variant, not per gem.
-- The Cyber Serpent's trail is **one** instanced ribbon strip regardless of how many ghosts are on
-  it. Nothing about the path touches the CPU, so the trail count is nearly free.
-- A far cast's targeting circle is two draw calls: one quad and one ring strip.
-- The six dynamic point lights are created at boot and parked at zero intensity rather than added
-  and removed — changing the light count forces three to recompile every material.
-- Shadow maps update exactly once per frame even though the scene is rendered several times.
-- `renderer.compileAsync()` runs during boot so the first cast never stutters on shader compile.
-- Pixel ratio is capped at 1.75; the depth and distortion buffers are half resolution.
+`src/archive/` 에 이 프로젝트의 전신이 있습니다. 프리핸드 스플라인을 따라 시전하던 4원소(불·물·대지·바람) 샌드박스와, 같은 획을 타고 가는 워크 모드입니다. 살아있는 앱이 임포트하지 않아 Vite가 번들하지 않습니다.
 
-Four concurrent casts — the pool's ceiling, whichever slots they came from — is what the budget is
-set against, and `MAX_CONCURRENT` in `AbilityManager` retires the oldest one past that whichever
-element it came from. Arming a far-cast circle costs two draw calls.
-
-Live counters (FPS, live particles, instances, draw calls) are in the top-right of the HUD.
+선형 스킬샷으로 패스 그리기를 대체하면서 그 시스템들이 서 있던 입력이 통째로 사라져 은퇴했습니다. 특히 레이마칭 불·수면은 캐낼 가치가 있습니다. 뭐가 있고 어떻게 살리는지는 `src/archive/README.md` 참고.
 
 ---
 
-## The archive
+## 알려진 거친 부분
 
-`src/archive/` holds the previous incarnation of this project: a four-element bending sandbox
-(fire, water, earth, air) cast along a freehand-drawn spline, plus a walk mode that let the avatar
-ride the same stroke. None of it is imported by the live app, so Vite never bundles it.
-
-It was retired because this build replaced path drawing with a linear skillshot, which removed the
-input every one of those systems was built on. The raymarched flame and water surfaces in
-particular are worth mining. See `src/archive/README.md` for what is in there and how to restore a
-piece of it.
+- 결정은 `transparent: true` + `depthWrite: true` 로 그립니다. 거의 불투명한 결정에는 맞는 절충이고 결정밭이 자기 안에서 정렬 뒤집히는 것도 막지만, `venom.gemOpacity` 가 낮으면 겹친 쐐기 사이 정렬 결함이 보입니다.
+- 분출 전선은 평평한 바닥 위 직선입니다. 두 가정 다 고정입니다 — 지면은 y = 0 평면 1장, 조준 레이캐스트는 그 평면을 겨냥합니다.
+- 충격 군집은 끝점 둘레 방사 배치라 시전 거리가 아주 짧으면 뒤 띠와 겹쳐야 할 만큼 겹칩니다.
+- 원거리 시전은 평평 바닥 가정을 두 번 물려받습니다. 원은 `y = 0` 쿼드 1장에 그리고, 수호막의 룬 띠와 파쇄판도 같은 평면에 붙습니다. 단차 위로는 드리우지 않습니다.
+- 조준 원은 애디티브라 발자국이 바닥을 가리기보다 밝힙니다. 옅은 바닥에서는 경계를 읽히게 하려면 밑에 비애디티브 패스 1장이 필요합니다.
 
 ---
 
-## Known rough edges
+## 라이선스
 
-- Crystals are drawn with `transparent: true` and `depthWrite: true`. That is the right trade for
-  near-opaque gems and it keeps the field from sorting through itself, but at low `venom.gemOpacity`
-  the sorting artefacts between overlapping spikes become visible.
-- The eruption front is a straight line on a flat floor. Both assumptions are baked in — the ground
-  is a single plane at y = 0, and the aim raycast targets that plane.
-- The impact cluster is placed radially around the end point, so at very short cast distances it
-  can overlap the band behind it more than it should.
-- The far cast inherits the flat-floor assumption twice over: the circle is drawn on a single quad
-  at `y = 0`, and the ward's rune bands and shattered plates are placed against that same plane.
-  Neither would drape over a step.
-- The targeting circle is additive, so the footprint brightens the floor rather than shading it. On
-  a pale floor the boundary would need a non-additive pass under it to stay readable.
+코드는 이 프로젝트 용도로 있는 그대로 제공됩니다. 동봉된 HDR 프로브와 캐릭터 FBX는 원본 라이선스를 유지합니다.
 
 ---
 
-## Licence
+## 원본 문서
 
-Code is provided as-is for the purposes of this project. The bundled HDR probe and the character
-FBX retain their original licences.
+기술 심층 문서(조준 SDF, 산성 레이마칭, 소환수 구조 등)의 영문 원본은 [`docs/README.en.md`](docs/README.en.md) 에 보존되어 있습니다.
+
+## 한글화 노트
+
+- 사용자 노출 문자열만 한국어화했습니다. 셰이더·식별자·설정 키·주석은 원문 그대로입니다.
+- 원작자 홍보 카드(우하단 연락처 패널)는 제거했습니다.
+- 스크린샷 11장은 `docs/screenshots/` 에 원본 그대로 있습니다.

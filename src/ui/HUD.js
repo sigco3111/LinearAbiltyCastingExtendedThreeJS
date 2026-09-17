@@ -1,16 +1,15 @@
 import { ELEMENTS, ELEMENT_META } from '../config/settings.js';
 import { ELEMENT_SIGILS } from './glyphs.js';
-import { CONTACT_MARKUP, ContactCard } from './contact.js';
 
 /**
- * Heads-up display: the ability bar, controls, live stats and toasts.
+ * 헤드업 디스플레이: 능력 바, 조작 안내, 실시간 통계, 토스트.
  *
- * Plain DOM — no framework. The bar is built from `ELEMENTS`, so a new ability
- * appears in it on its own; the slots are the only interactive part, and they
- * mirror the keyboard shortcuts through `onAbility`.
+ * 프레임워크 없이 그냥 DOM만 사용합니다. 바는 `ELEMENTS` 로부터 빌드되므로
+ * 새 능력을 추가하면 자동으로 표시되고, 슬롯이 유일한 상호작용 영역이며
+ * 키보드 단축키를 `onAbility` 로 그대로 미러링합니다.
  *
- * The cooldown sweep is a `conic-gradient` driven by a CSS custom property, so
- * updating it every frame is one `setProperty` call and never touches layout.
+ * 쿨다운 차오름은 CSS 사용자 정의 속성으로 구동되는 `conic-gradient` 이므로,
+ * 매 프레임 갱신은 `setProperty` 한 번 호출이고 레이아웃을 건드리지 않습니다.
  */
 export class HUD {
   constructor(root) {
@@ -26,38 +25,38 @@ export class HUD {
 
     root.innerHTML = `
       <div class="hud__panel hud__title">
-        Elemental Sandbox
-        <span data-blurb>Press Q, E, R, F, V, X, B, Z, N or K, aim, click to cast.</span>
+        원소 샌드박스
+        <span data-blurb>Q, E, R, F, V, X, B, Z, N, K 중 하나를 누르고 조준한 뒤 클릭하여 시전하세요.</span>
       </div>
 
       <div class="hud__panel hud__stats">
         <div>FPS <b data-stat="fps">—</b></div>
-        <div>Particles <b data-stat="particles">0</b></div>
-        <div>Instances <b data-stat="spikes">0</b></div>
-        <div>Draw calls <b data-stat="calls">0</b></div>
+        <div>파티클 <b data-stat="particles">0</b></div>
+        <div>인스턴스 <b data-stat="spikes">0</b></div>
+        <div>드로우 콜 <b data-stat="calls">0</b></div>
       </div>
 
       <div class="hud__panel hud__help">
-        <div><strong>Q</strong> — Volcanic Horror Ward &nbsp; <strong>E</strong> — Caustic Bloom</div>
-        <div><strong>R</strong> — Arborist's Growth &nbsp; <strong>F</strong> — Cyber Serpent</div>
-        <div><strong>V</strong> — Crystallized Venom Surge</div>
-        <div><strong>X</strong> — Brutalist Earth Blast</div>
-        <div><strong>B</strong> — Ink-paint Water Zone</div>
-        <div><strong>Z</strong> — Astral Void Blast &nbsp; <strong>N</strong> — Baleful Cascade</div>
-        <div><strong>K</strong> — Celestial Rend</div>
-        <div class="hud__help-note">Q, E, R, B, Z, N and K are far casts — aimed with a circle, not an arrow.</div>
-        <div><strong>Move</strong> — aim &nbsp; <strong>Left click</strong> — cast</div>
-        <div><strong>Esc / right click</strong> — cancel the cast</div>
-        <div><strong>Right drag</strong> — orbit &nbsp; <strong>Scroll</strong> — zoom</div>
+        <div><strong>Q</strong> — 화산 공포 수호막 &nbsp; <strong>E</strong> — 부식 개화</div>
+        <div><strong>R</strong> — 수목가의 성장 &nbsp; <strong>F</strong> — 사이버 서펜트</div>
+        <div><strong>V</strong> — 결정화 맹독 쇄도</div>
+        <div><strong>X</strong> — 브루탈 대지 폭발</div>
+        <div><strong>B</strong> — 먹물 수역</div>
+        <div><strong>Z</strong> — 성간 공허 폭발 &nbsp; <strong>N</strong> — 재앙의 연쇄 표식</div>
+        <div><strong>K</strong> — 천열</div>
+        <div class="hud__help-note">Q, E, R, B, Z, N, K는 원거리 시전 — 화살표가 아니라 원으로 조준합니다.</div>
+        <div><strong>이동</strong> — 조준 &nbsp; <strong>왼쪽 클릭</strong> — 시전</div>
+        <div><strong>Esc / 오른쪽 클릭</strong> — 시전 취소</div>
+        <div><strong>오른쪽 드래그</strong> — 회전 &nbsp; <strong>스크롤</strong> — 줌</div>
         <div style="margin-top:6px">
-          <kbd>G</kbd> editor &nbsp; <kbd>P</kbd> pause &nbsp; <kbd>C</kbd> clear
+          <kbd>G</kbd> 에디터 &nbsp; <kbd>P</kbd> 일시정지 &nbsp; <kbd>C</kbd> 지우기
         </div>
-        <div><kbd>T</kbd> reset targets &nbsp; <kbd>H</kbd> hide this</div>
-        <div class="hud__help-note">Any cast that reaches a target one-shots it.</div>
-        <div class="hud__help-note">The Chrono-Summon picks its own: it cuts them in half.</div>
-        <div class="hud__help-note">The Sumi Tide picks its own too: it drags them under.</div>
-        <div class="hud__help-note">So does the Baleful Cascade: it throws its own blades at them.</div>
-        <div class="hud__help-note">Paused still applies every editor change.</div>
+        <div><kbd>T</kbd> 표적 초기화 &nbsp; <kbd>H</kbd> 이 도움말 숨기기</div>
+        <div class="hud__help-note">표적에 닿은 시전은 일격에 처치합니다.</div>
+        <div class="hud__help-note">시간소환수는 스스로 고릅니다 — 반으로 가릅니다.</div>
+        <div class="hud__help-note">수묵 조류도 스스로 고릅니다 — 물속으로 끌어들입니다.</div>
+        <div class="hud__help-note">재앙의 연쇄도 마찬가지입니다 — 스스로 칼날을 던집니다.</div>
+        <div class="hud__help-note">일시정지 중에도 에디터 변경은 바로 적용됩니다.</div>
       </div>
 
       <div class="hud__abilities">
@@ -73,13 +72,10 @@ export class HUD {
         }).join('')}
       </div>
 
-      ${CONTACT_MARKUP}
-
       <div class="hud__toast" data-toast></div>
-      <div class="hud__paused" data-paused>Paused</div>
+      <div class="hud__paused" data-paused>일시정지됨</div>
     `;
 
-    this.contact = new ContactCard(root);
     this.cards = new Map();
     for (const card of root.querySelectorAll('.ability-card')) {
       this.cards.set(card.dataset.element, card);
@@ -107,11 +103,10 @@ export class HUD {
       card.classList.toggle('is-active', key === element);
     }
     const meta = ELEMENT_META[element];
-    this.contact.setAccent(meta?.accent);
-    if (meta && !options.silent) this.showToast(`${meta.hint} selected`);
+    if (meta && !options.silent) this.showToast(`${meta.hint} 선택됨`);
   }
 
-  /** Highlight the slot while a cast is armed. */
+  /** 시전 능력이 활성화되어 있는 동안 슬롯을 강조합니다. */
   setArmed(armed) {
     if (armed === this._armedShown) return;
     this._armedShown = armed;
@@ -119,12 +114,12 @@ export class HUD {
   }
 
   /**
-   * Drive one slot's cooldown sweep. Cooldowns are per ability, so this is
-   * called once per element each frame.
+   * 한 슬롯의 쿨다운 차오름을 구동합니다. 쿨다운은 능력별이므로
+   * 능력마다 매 프레임 한 번씩 호출됩니다.
    *
    * @param {string} element
-   * @param {number} remaining seconds left
-   * @param {number} total     the full cooldown, for the sweep angle
+   * @param {number} remaining 남은 시간(초)
+   * @param {number} total     전체 쿨다운(차오름 각도 기준)
    */
   setCooldown(element, remaining, total) {
     const card = this.cards.get(element);
@@ -136,11 +131,6 @@ export class HUD {
     this._cooldownShown.set(element, ratio);
     card.style.setProperty('--cooldown', ratio);
     card.classList.toggle('is-cooling', ratio > 0.001);
-  }
-
-  /** Play the contact card's entrance once the loading veil is clearing. */
-  reveal() {
-    this.contact.reveal();
   }
 
   setPaused(paused) {
@@ -161,8 +151,8 @@ export class HUD {
   /**
    * @param {number} dt
    * @param {() => {particles:number, spikes:number, calls:number}} collect
-   *   Called only when the readout actually refreshes, so gathering the numbers
-   *   (which means walking the particle pools) stays off the hot path.
+   *   실제로 판독값이 갱신될 때만 호출되므로, 숫자 수집(파티클 풀 순회)이
+   *   핫 패스에서 벗어나 있습니다.
    */
   update(dt, collect) {
     this._frames++;
@@ -181,7 +171,7 @@ export class HUD {
   }
 }
 
-/** Boot screen helper. */
+/** 부팅 화면 도우미. */
 export class LoadingScreen {
   constructor() {
     this.element = document.getElementById('loader');

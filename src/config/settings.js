@@ -4392,65 +4392,65 @@ export const ELEMENTS = [
  */
 export const ELEMENT_META = {
   ward: {
-    label: 'Volcanic Ward',
+    label: '화산 수호막',
     accent: '#ff4a2a',
     key: 'Q',
-    hint: 'Volcanic Horror Ward',
+    hint: '화산 공포 수호막',
     cast: CastShape.ZONE
   },
   acid: {
-    label: 'Caustic Bloom',
+    label: '부식 개화',
     accent: '#9dff2b',
     key: 'E',
-    hint: 'Poison Acid Aura',
+    hint: '맹독 산성 오라',
     cast: CastShape.ZONE
   },
   growth: {
-    label: "Arborist's Growth",
+    label: '수목가의 성장',
     accent: '#6effa8',
     key: 'R',
-    hint: "Arborist's Growth Chrono-Summon",
+    hint: '수목가의 성장 시간소환수',
     cast: CastShape.ZONE
   },
-  cyber: { label: 'Cyber Serpent', accent: '#5fe9ff', key: 'F', hint: 'Neon Cyber Serpent' },
+  cyber: { label: '사이버 서펜트', accent: '#5fe9ff', key: 'F', hint: '네온 사이버 서펜트' },
   venom: {
-    label: 'Venom Surge',
+    label: '맹독 쇄도',
     accent: '#a878f0',
     key: 'V',
-    hint: 'Crystallized Venom Surge'
+    hint: '결정화 맹독 쇄도'
   },
   quake: {
-    label: 'Monolith Rift',
+    label: '모놀리스 균열',
     accent: '#c9bda6',
     key: 'X',
-    hint: 'Brutalist Earth Blast'
+    hint: '브루탈 대지 폭발'
   },
   ink: {
-    label: 'Sumi Tide',
+    label: '수묵 조류',
     accent: '#7fd6cf',
     key: 'B',
-    hint: 'Ink-paint Water Zone',
+    hint: '먹물 수역',
     cast: CastShape.ZONE
   },
   astral: {
-    label: 'Astral Void Blast',
+    label: '성간 공허 폭발',
     accent: '#b98cff',
     key: 'Z',
-    hint: 'Cosmic Singularity',
+    hint: '우주 특이점',
     cast: CastShape.ZONE
   },
   cascade: {
-    label: 'Baleful Cascade',
+    label: '재앙의 연쇄',
     accent: '#3ff0e0',
     key: 'N',
-    hint: 'Baleful Cascade Mark',
+    hint: '재앙의 연쇄 표식',
     cast: CastShape.ZONE
   },
   rend: {
-    label: 'Celestial Rend',
+    label: '천열',
     accent: '#ffcf7a',
     key: 'K',
-    hint: 'Judgment Cascade',
+    hint: '심판의 연쇄',
     cast: CastShape.ZONE
   }
 };

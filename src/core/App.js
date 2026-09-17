@@ -180,7 +180,7 @@ export class App {
     this.input.on('action', (action, slot) => this._handleAction(action, slot));
 
     this.aim.on('cast', (origin, direction, distance) => this._cast(origin, direction, distance));
-    this.aim.on('reject', () => this.hud.showToast('Too close — aim further out'));
+    this.aim.on('reject', () => this.hud.showToast('너무 가까워요 — 더 멀리 조준하세요'));
 
     this.hud.onAbility = (element) => this.armAbility(element);
   }
@@ -206,16 +206,16 @@ export class App {
         break;
       case 'clear':
         this.clearEffects();
-        this.hud.showToast('Effects cleared');
+        this.hud.showToast('이펙트를 지웠습니다');
         break;
       case 'resetDummies':
         this.dummies.reset();
-        this.hud.showToast('Targets reset');
+        this.hud.showToast('표적을 초기화했습니다');
         break;
       case 'togglePause':
         this.paused = !this.paused;
         this.hud.setPaused(this.paused);
-        this.hud.showToast(this.paused ? 'Paused — the editor still applies' : 'Resumed');
+        this.hud.showToast(this.paused ? '일시정지됨 — 에디터는 계속 적용됩니다' : '다시 시작됨');
         break;
       default:
         break;
@@ -236,7 +236,7 @@ export class App {
   /** Select an ability and arm it, unless it is still cooling down. */
   armAbility(element = this.element) {
     if ((this.cooldowns.get(element) ?? 0) > 0) {
-      this.hud.showToast('Not ready');
+      this.hud.showToast('아직 준비되지 않았습니다');
       return;
     }
     // Selecting before arming means the arrow is already drawn to the new
@@ -274,21 +274,21 @@ export class App {
   async load() {
     const assets = new AssetLoader();
 
-    this.loading.setProgress(0.05, 'Loading environment…');
+    this.loading.setProgress(0.05, '환경 불러오는 중…');
     const hdr = await assets.loadHDR(HDR_URL);
     await this.environment.loadEnvironment(hdr);
     frame.uEnvMap.value = this.environment.equirect;
 
-    this.loading.setProgress(0.35, 'Loading floor…');
+    this.loading.setProgress(0.35, '바닥 불러오는 중…');
     await this.ground.loadTextures(assets);
 
-    this.loading.setProgress(0.5, 'Loading character…');
+    this.loading.setProgress(0.5, '캐릭터 불러오는 중…');
     await this.character.load(assets);
 
-    this.loading.setProgress(0.72, 'Loading targets…');
+    this.loading.setProgress(0.72, '표적 불러오는 중…');
     await this.dummies.load(assets);
 
-    this.loading.setProgress(0.8, 'Compiling the construct…');
+    this.loading.setProgress(0.8, '장면 컴파일 중…');
     const serpent = await assets.loadGLTF(SERPENT_URL);
     this.models.serpent = buildSerpentGeometry(serpent.scene, { ghosts: 8 });
     // The file's own material and its megabyte of base colour are dead weight:
@@ -304,9 +304,8 @@ export class App {
 
     await this._precompile(0.85, 0.99);
 
-    this.loading.setProgress(1, 'Ready');
+    this.loading.setProgress(1, '준비 완료');
     this.loading.hide();
-    this.hud.reveal();
 
     this.start();
   }
@@ -358,7 +357,7 @@ export class App {
       const element = elements[i];
       this.loading.setProgress(
         from + (to - from) * (i / elements.length),
-        `Compiling ${ELEMENT_META[element]?.label ?? element}…`
+        `컴파일 중: ${ELEMENT_META[element]?.label ?? element}…`
       );
       // Both halves below block the main thread for as long as they take, so
       // yield first or the veil never shows a single one of these labels.
